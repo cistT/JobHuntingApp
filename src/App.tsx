@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {Header} from './Header/Header'
+import LoginContent from './Content/LoginContent';
+import { useReducer, useState, VFC } from 'react';
+import MenuBar from './MenuBar/MenuBar';
 
-function App() {
+const App:VFC<{}>=()=> {
+
+  const [isLoggedIn,toggleLogin]=useReducer(login=>!login,false);
+  //変数名を変更したほうがいいかもしれない
+  const [content,setContent]=useState(0);
+  const loginMenuBarLabel=["プロフィール","一覧","登録"];
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header
+        appTitle="就活管理サイト"
+        isLoggedIn={isLoggedIn}
+        clickIsLoggedInButton={toggleLogin}
+      />
+
+      {/* ログアウト状態の時の画面を作成する必要がある */}
+      {isLoggedIn&&
+        <>
+          <MenuBar
+            loginMenuBarLabel={loginMenuBarLabel}
+            selectFocusPage={setContent}
+          />
+          <LoginContent
+            content={content}
+          />
+        </>
+      }
+    </>
   );
 }
 
