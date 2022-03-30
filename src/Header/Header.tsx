@@ -24,12 +24,16 @@ const MyStyleButton=styled(Button)({
 
 export const  Header:VFC<{
     appTitle?:string,
-    isLoggedIn:boolean,
-    clickIsLoggedInButton:React.DispatchWithoutAction
+    login?:boolean,
+    setLogin:React.Dispatch<React.SetStateAction<boolean>>,
+    openLogin?:()=>void,
+    openNewRegistration?:()=>void,
 }>=({
     appTitle="デモアプリ",
-    isLoggedIn,
-    clickIsLoggedInButton
+    login=false,
+    setLogin,
+    openLogin=()=>undefined,
+    openNewRegistration=()=>undefined,
 })=>{
 
     return(
@@ -42,11 +46,23 @@ export const  Header:VFC<{
                     </div>
                     {/* ログアウトorログイン+新規登録を切り分けたほうがいいかもしれない */}
                     <div style={{display: 'flex',marginRight:"5%"}}>
-                        {isLoggedIn?
-                            <MyStyleButton onClick={()=>clickIsLoggedInButton()} variant="contained" >ログアウト</MyStyleButton>:
+                        {login?
+                            <MyStyleButton
+                                onClick={()=>setLogin(false)}
+                                variant="contained" >
+                                    ログアウト
+                            </MyStyleButton>:
                             <>
-                                <MyStyleButton variant="contained">新規登録</MyStyleButton>
-                                <MyStyleButton onClick={()=>clickIsLoggedInButton()} variant="contained">ログイン</MyStyleButton>
+                                <MyStyleButton
+                                    variant="contained"
+                                    onClick={openNewRegistration}>
+                                        新規登録
+                                </MyStyleButton>
+                                <MyStyleButton
+                                    onClick={openLogin}
+                                    variant="contained">
+                                        ログイン
+                                </MyStyleButton>
                             </>}
                     </div>
                 </MyStyleToolbar>
