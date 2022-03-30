@@ -3,8 +3,8 @@ import LoginContent from './Content/LoginContent';
 import { useReducer,useState, VFC } from 'react';
 import MenuBar from './MenuBar/MenuBar';
 import { useForm } from 'react-hook-form';
-import Login from './Login';
-import NewRegistration from './NewRegistration';
+import Login from './Login/Login';
+import NewRegistration from './NewRegistration/NewRegistration';
 import useEffectCustom from './CustomHook/useEffectCustom';
 
 const App:VFC<{}>=()=> {
