@@ -1,20 +1,52 @@
-import { useEffect, useReducer, useState, VFC } from "react";
+import { useEffect, useLayoutEffect, useReducer, useRef, useState, VFC } from "react";
 import { ListItemArea } from "./List/ListItemArea";
 import Profile from "./Profile/Profile"
 import { RegisterCompany } from "./RegisterCompany/RegisterCompany";
 import { CompanyInformationType } from "./TypeDefinitionFiles/CompanyInformationType";
 import styled from "@emotion/styled";
 import { Controller, useForm } from 'react-hook-form';
+import useEffectCustom from "../CustomHook/useEffectCustom";
 
 const LoginContent:VFC<{
+    userId:string,
     content:number
-}>=({content})=>{
+}>=({userId,content})=>{
 
        //Profile コンポーネント
-       const [userName,setUserName]=useState("田中太郎");
-       const [appeal,setAppeal]=useState("頑張ります");
+       const [userName,setUserName]=useState("");
+       const [appeal,setAppeal]=useState("");
        const [memo,setMemo]=useState("");
-    
+       const [profile,togleProfile]=useReducer(profile=>!profile,false);
+
+       useLayoutEffect(()=>{
+            (async ()=>{
+                const res=await fetch("http://localhost:8080/profile/userId="+userId);
+                const json=await res.json();
+                setUserName(json.userName||"");
+                setAppeal(json.appeal||"");
+                setMemo(json.memo||"");
+            })();
+           },[])
+
+       useEffectCustom(()=>{
+        (async ()=>{
+            const url = "http://localhost:8080/test";
+            const response =fetch(url,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                  },
+                body:JSON.stringify({
+                    userId: userId,
+                    userName: userName,
+                    appeal:appeal,
+                    memo:memo
+                })
+            })
+            window.alert("登録が完了しました");
+        })()
+       },[profile])
+
        const {register,handleSubmit,reset}=useForm({defaultValues:{
         userName:userName,
         appeal:appeal,
@@ -32,9 +64,11 @@ const LoginContent:VFC<{
       }});
 
        const clickDecisionProfile=(data:any)=>{
+       
            setUserName(data.userName);
            setAppeal(data.appeal);
            setMemo(data.userMemo);
+           togleProfile()
        }
 
     //Registrationコンポーネント 要改善
@@ -208,3 +242,33 @@ export default LoginContent;
     //     }
     //     registrationItems.forEach((items) => {items.forEach((item) =>item.set([""]))})//初期化
     // }
+
+
+
+
+    // const renderFlgRef = useRef(false);
+    // useEffect(() => {
+    //     if(renderFlgRef.current){
+    //      (async ()=>{
+    //          const url = "http://localhost:8080/test";
+    //          const response =fetch(url,{
+    //              method: "POST",
+    //              headers: {
+    //                  'Content-Type': 'application/json'
+    //                },
+    //              body:JSON.stringify({
+    //                  userId: userId,
+    //                  userName: userName,
+    //                  appeal:appeal,
+    //                  memo:memo
+    //              })
+    //          })
+    //          window.alert("登録が完了しました");
+    //      })()
+   
+    //     }else{
+    //      renderFlgRef.current = true;
+    //      window.alert("third");
+    //     }
+        
+    // },[profile])

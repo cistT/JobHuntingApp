@@ -17,7 +17,7 @@ const MenuBarButton=styled(Button)({
 
 const MenuBar:VFC<{
     loginMenuBarLabel:string[],
-    selectFocusPage:React.Dispatch<React.SetStateAction<number>>
+    selectFocusPage:(i:number)=>void
 }>= ({loginMenuBarLabel,selectFocusPage})=>{
     return (
         <MenuBarGroup>
