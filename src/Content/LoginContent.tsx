@@ -1,11 +1,11 @@
-import { useEffect, useLayoutEffect, useReducer, useRef, useState, VFC } from "react";
+import {  useLayoutEffect, useReducer, useState, VFC } from "react";
 import { ListItemArea } from "./List/ListItemArea";
 import Profile from "./Profile/Profile"
 import { RegisterCompany } from "./RegisterCompany/RegisterCompany";
 import { CompanyInformationType } from "./TypeDefinitionFiles/CompanyInformationType";
-import styled from "@emotion/styled";
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import useEffectCustom from "../CustomHook/useEffectCustom";
+import UUID from 'uuidjs';
 
 const LoginContent:VFC<{
     userId:string,
@@ -19,8 +19,9 @@ const LoginContent:VFC<{
        const [profile,togleProfile]=useReducer(profile=>!profile,false);
 
        useLayoutEffect(()=>{
+           //ログイン時に保存されているプロフィールを取得
             (async ()=>{
-                const res=await fetch("http://localhost:8080/profile/userId="+userId);
+                const res=await fetch(`${process.env.REACT_APP_CONNECT_DB}/profile/userId=${userId}`);
                 const json=await res.json();
                 setUserName(json.userName||"");
                 setAppeal(json.appeal||"");
@@ -47,21 +48,20 @@ const LoginContent:VFC<{
         })()
        },[profile])
 
-       const {register,handleSubmit,reset}=useForm({defaultValues:{
-        userName:userName,
-        appeal:appeal,
-        userMemo:memo,
-        name:"",
-        address:"",
-        telephoneNumber:"",
-        mailAddress:"",
-        url:"",
-        deliverables:"",
-        deliverablesTerm:"",
-        internship:"",
-        selection:"",
-        memo:""
-      }});
+       const {register,handleSubmit,reset}=useForm<{
+        userName:string,
+        appeal:string,
+        userMemo:string,
+        name:string,
+        address:string,
+        telephoneNumber:string,
+        mailAddress:string,
+        url:string,
+        deliverables:string,
+        deliverablesTerm:string,
+        internship:string,
+        selection:string,
+        memo:string}>();
 
        const clickDecisionProfile=(data:any)=>{
        
@@ -74,20 +74,50 @@ const LoginContent:VFC<{
     //Registrationコンポーネント 要改善
   
     const [companyRegistrationInfo,setPrintRegistrationItems,]=useState<CompanyInformationType[]>([]);
+    const [registerFlag,toggleRegisterFlag]=useReducer(registerFlag=>!registerFlag,false);
+    useEffectCustom(()=>{
+        const company=companyRegistrationInfo[companyRegistrationInfo.length-1];
+
+        (async ()=>{
+            const url = "http://localhost:8080/registerCompany";
+            const res=fetch(url,{
+                method: "POST",
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                  },
+                body:JSON.stringify({
+                    userId: userId,
+                    registerId:company.registerId,
+                    companyName:company.companyName,
+                    companyAddress:company.companyAddress,
+                    companyTelephoneNumber:company.companyTelephoneNumber,
+                    companyMailAddress:company.companyMailAddress,
+                    companyUrl:company.companyUrl,
+                    companyDeliverables:company.companyDeliverables,
+                    companyDeliverablesTerm:company.companyDeliverablesTerm,
+                    companyInternship:company.companyInternship,
+                    companySelection:company.companySelection,
+                    companyMemo:company.companyMemo,
+                })
+            })
+        })()
+    },[registerFlag])
 
     const clickDecisionCompany=(data:any)=>{
         
         setPrintRegistrationItems([...companyRegistrationInfo,{
-            companyName:[data.name],
-            companyAddress:[data.address],
-            companyTelephoneNumber:[data.telephoneNumber],
-            companyMailAddress:[data.mailAddress],
-            companyUrl:[data.url],
-            companyDeliverables:[data.deliverables],
-            companyDeliverablesTerm:[data.deliverablesTerm],
-            companyInternship:[data.internship],
-            companySelection:[data.selection],
-            companyMemo:[data.memo],
+            registerId:UUID.generate(),
+            companyName:data.name,
+            companyAddress:data.address,
+            companyTelephoneNumber:data.telephoneNumber,
+            companyMailAddress:data.mailAddress,
+            companyUrl:data.url,
+            companyDeliverables:data.deliverables,
+            companyDeliverablesTerm:data.deliverablesTerm,
+            companyInternship:data.internship,
+            companySelection:data.selection,
+            companyMemo:data.memo,
         }]);
         window.alert("登録が完了しました");
         reset({
@@ -105,25 +135,58 @@ const LoginContent:VFC<{
             selection:"",
             memo:""
         });
+        toggleRegisterFlag();
+    }
+
+    const [deleteId,setDeleteId]=useState("");
+    const [deleteFlag,toggleDeleteFlag] =useReducer(deleteFlag=>!deleteFlag,false);
+    useEffectCustom(()=>{
+        //エラー
+        (async ()=>{
+            const url = "http://localhost:8080/deleteRegisterId";
+            const response =await fetch(url,{
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                  },
+                body:JSON.stringify({
+                    deleteRegisterId:deleteId
+                })
+            })
+        })()
+        
+    },[deleteFlag])
+    const deletePrintRegistrationItem=(registerId:string)=>{
+        setDeleteId(registerId);
+        toggleDeleteFlag();
+        setPrintRegistrationItems(
+            companyRegistrationInfo
+            .filter((item)=>item.registerId!==registerId)
+        )
     }
 
     return (
-        <>
 
-            {content===0&&
-            <Profile
-                profile={[
-                    {profileLabel:"名前",prfileInformation:userName},
-                    {profileLabel:"アピール",prfileInformation:appeal},
-                    {profileLabel:"メモ",prfileInformation:memo},
-            ]}
-                register={[register("userName"),register("appeal"),register("userMemo")]}
-                onSubmit={handleSubmit(clickDecisionProfile)}
-            />}
-            {content===1&&
+        <>
+            {content===0&&(
+                <Profile
+                    profile={[
+                        {profileLabel:"名前",prfileInformation:userName},
+                        {profileLabel:"アピール",prfileInformation:appeal},
+                        {profileLabel:"メモ",prfileInformation:memo},
+                    ]}
+                    register={[register("userName"),register("appeal"),register("userMemo")]}
+                    onSubmit={handleSubmit(clickDecisionProfile)}
+                />
+            )}
+
+            {content===1&&(
                 <ListItemArea
-                    companyRegistrationInfo={companyRegistrationInfo}></ListItemArea>}
-            {content===2&&
+                    companyRegistrationInfo={companyRegistrationInfo}
+                    deletePrintRegistrationItem={deletePrintRegistrationItem}
+                />
+            )}
+            {content===2&&(
                 <RegisterCompany
                     contentTitle="企業登録"
                     register={[
@@ -140,7 +203,8 @@ const LoginContent:VFC<{
                     ]}
                     onSubmit={handleSubmit(clickDecisionCompany)} 
                     titles={["企業情報","提出物","インターン・選考","メモ"]}
-                />}
+                />
+            )}
         </>
     )
 }
