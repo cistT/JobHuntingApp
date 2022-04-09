@@ -6,6 +6,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import styled from "@emotion/styled";
 import ButtonWithTooltip from "./ButtonWithTooltip";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Typography } from "@mui/material";
 
 const MyStyleEditIcon=styled(EditIcon)({
     height:"60px",
@@ -32,6 +33,9 @@ const Profile:VFC<{
 
     return (
         <ProfileErea>
+                <Typography gutterBottom variant="h5" component="div">
+                    プロフィール
+                </Typography>
                 {isRewritable?
                   <ButtonWithTooltip
                     title="プロフィール一覧に戻ります"

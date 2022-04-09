@@ -15,7 +15,9 @@ const PageSelectionArea:VFC<{
         <div style={{display:"flex",textAlign:"center",height:"60px"}} >
             <div style={{width:"100px"}}>{page>1&&<BackPage  clickBackButton={()=>setInputPage(page-1)}/>}</div>
             <SelectionPage focusPage={page} page={page} title={titles[page-1]}/>
-            <div style={{width:"100px"}}>{page<titles.length&&<NextPage clickNextButton={()=>setInputPage(page+1)} />}</div>
+            <div style={{width:"100px"}}>{page<titles.length&&<NextPage clickNextButton={()=>
+                setInputPage(page+1)
+                } />}</div>
         </div>
     )
 }

@@ -3,6 +3,8 @@ import PageSelectionArea from "./PageSelection/PageSelectionArea";
 import PageSelectionButtonArea from "./PageSelection/PageSelectionButtonArea";
 import CompanyInputForm from "./CompanyInput/CompanyInputForm";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Typography } from "@mui/material";
+import useEffectCustom from "../../CustomHook/useEffectCustom";
 
 export const RegisterCompany:VFC<{
     contentTitle?:string,
@@ -13,10 +15,15 @@ export const RegisterCompany:VFC<{
 }>=({contentTitle="No Title",register=[],titles,onSubmit,labels})=>{
 
     const [inputPage,setInputPage]=useState<number>(1);
+    useEffectCustom(()=>{
+        window.scrollTo(0, 0)
+    },[inputPage])
 
     return (
         <>
-            <h1>{contentTitle}</h1>
+            <Typography gutterBottom variant="h5" component="div">
+                    {contentTitle}
+                </Typography>
 
             <PageSelectionArea
                 page={inputPage}
@@ -39,26 +46,3 @@ export const RegisterCompany:VFC<{
         </>
     )
 }
-
-
-            // {/* {
-            //     register.map((item,i)=>(
-            //         <div key={i}>
-            //             <h3>{item.fieldName}</h3>
-            //             <Tooltip
-            //                 title="自由に記入することができます"
-            //                 placement="top-start"
-            //                 arrow
-            //                 >
-            //                 <TextField 
-            //                     name={item.fieldName}
-            //                     multiline
-            //                     margin="normal"
-            //                     placeholder={`${item.fieldName}を入力してください(任意)`}
-            //                     style={{width:"90vw",height:"100px"}}
-            //                     onChange={(e)=>{item.set([e.target.value])}}
-            //                 />
-            //             </Tooltip>
-            //         </div>
-            //     ))
-            // }/*}

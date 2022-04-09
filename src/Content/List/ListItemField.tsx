@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
 import { VFC } from "react";
 import { CompanyInformationType } from "../TypeDefinitionFiles/CompanyInformationType";
-import List from '@mui/material/List';
 import { Button, ListItemText } from "@mui/material";
 import ListItem from '@mui/material/ListItem';
 import Item from "./Item";
@@ -23,7 +22,12 @@ export const ListItemField:VFC<{
             <h1>企業情報</h1>
             {Object
                 .values(printRegistrationItem)
-                .map((item,i)=><Item itemTitle={title[i]}  itemValue={item} />)}
+                .filter((_,i)=>i!==0)
+                .map((item,i)=>(
+                    <div key={item}>
+                        <Item itemTitle={title[i]}  itemValue={item} />
+                    </div>
+                ))}
           
             <Button onClick={clickCloseButton}>閉じる</Button>
         </>

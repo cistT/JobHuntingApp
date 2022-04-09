@@ -2,12 +2,12 @@ import { VFC } from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { IconButton } from "@mui/material";
 
-const NextPage:VFC<{clickNextButton:()=>void}>=({clickNextButton=()=>undefined})=>{
+const NextPage:VFC<{clickNextButton:()=>void}>=({clickNextButton})=>{
 
     return (
         <>
             <IconButton>
-                <ArrowForwardIosIcon onClick={clickNextButton}/>
+                <ArrowForwardIosIcon onClick={()=>clickNextButton()}/>
             </IconButton>
         </>
     )
