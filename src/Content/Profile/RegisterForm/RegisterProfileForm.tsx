@@ -1,26 +1,28 @@
+import { Button, styled } from "@mui/material";
 import { VFC } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 import RegisterProfileItem from "./RegisterProfileItem"
 
 export const RegisterProfileForm:VFC<{
-    profileLabels:string[],
+    registerProfile:{
+        profileLabel: string;
+        register: UseFormRegisterReturn;
+    }[],
     onSubmit:()=>void,
-    register:UseFormRegisterReturn[],
-}>=({profileLabels,onSubmit,register})=>{
+}>=({registerProfile,onSubmit})=>{
 
     return (
     <>
 
         <form onSubmit={onSubmit}>
-            {profileLabels.map((label,i)=>
-                    <RegisterProfileItem
-                        label={label}
-                        register={register[i]}
-                        key={i}
-                    />
-              
-            )}
-            <input type="submit" />
+            {registerProfile.map((item)=>(
+                <RegisterProfileItem
+                    label={item.profileLabel}
+                    register={item.register}
+                    key={item.profileLabel}
+                />))
+            }
+            <Button type="submit">送信</Button>
         </form>
 
     </>)

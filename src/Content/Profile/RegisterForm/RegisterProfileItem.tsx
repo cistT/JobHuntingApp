@@ -1,4 +1,4 @@
-import { Divider, TextField, Tooltip, Typography } from "@mui/material"
+import {TextField, Tooltip, Typography } from "@mui/material"
 import { VFC } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 
@@ -11,11 +11,10 @@ const RegistrationProfileItem:VFC<{
 })=>{
 
     return (
-    <>
-        <div>
-            <Typography gutterBottom variant="h5" component="div">
-                    {label}
-                </Typography>
+    <div>
+        <Typography gutterBottom variant="h5" component="div">
+                {label}
+            </Typography>
             <Tooltip
                 title="自由に記入することができます"
                 placement="top-start"
@@ -30,14 +29,8 @@ const RegistrationProfileItem:VFC<{
                     fullWidth
                     rows={4}
                 />
-            
             </Tooltip>
-        
-        </div>
-     
-        
-    
-    </>
+    </div>
     )
 }
 

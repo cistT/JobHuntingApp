@@ -5,6 +5,7 @@ import CompanyInputForm from "./CompanyInput/CompanyInputForm";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { Typography } from "@mui/material";
 import useEffectCustom from "../../CustomHook/useEffectCustom";
+import RegisterTitle from "./RegisterTitle/RegisterTitle";
 
 export const RegisterCompany:VFC<{
     contentTitle?:string,
@@ -14,33 +15,36 @@ export const RegisterCompany:VFC<{
     onSubmit: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>
 }>=({contentTitle="No Title",register=[],titles,onSubmit,labels})=>{
 
-    const [inputPage,setInputPage]=useState<number>(1);
+    const [inputPage,setInputPage]=useState<number>(0);
+
+    const selectInputPage=(page:number)=>{
+        setInputPage(page);
+    }
+
     useEffectCustom(()=>{
         window.scrollTo(0, 0)
     },[inputPage])
 
     return (
         <>
-            <Typography gutterBottom variant="h5" component="div">
-                    {contentTitle}
-                </Typography>
+            <RegisterTitle title={contentTitle} />
 
             <PageSelectionArea
                 page={inputPage}
                 titles={titles}
-                setInputPage={setInputPage}
+                selectInputPage={selectInputPage}
             />
 
             <CompanyInputForm
-                labels={labels[inputPage-1]}
-                register={register[inputPage-1]}
+                labels={labels[inputPage]}
+                register={register[inputPage]}
                 onSubmit={onSubmit}
             />
 
             <PageSelectionButtonArea
-                focusPage={inputPage} 
-                focusLastPage={register.length}
-                setFocus={setInputPage}
+                focusPage={inputPage}
+                lastPage={register.length-1}
+                selectInputPage={selectInputPage}
                 onClick={onSubmit}
             />
         </>

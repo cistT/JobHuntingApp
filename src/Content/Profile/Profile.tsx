@@ -9,25 +9,29 @@ import { UseFormRegisterReturn } from "react-hook-form";
 import { Typography } from "@mui/material";
 
 const MyStyleEditIcon=styled(EditIcon)({
-    height:"60px",
-    width:"60px",
+    height:'60px',
+    width:'60px',
 })
 
 const MyStyleArrowBackIcon=styled(ArrowBackIcon)({
-    height:"60px",
-    width:"60px",
+    height:'60px',
+    width:'60px',
 })
 
 const ProfileErea=styled("div")({
-    height:"70vh",
-    width:"100vh",
+    height:'70vh',
+    width:'100vh',
 })
 
 const Profile:VFC<{
     profile: {profileLabel:string,prfileInformation:string}[],
     onSubmit:(e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>,
-    register:UseFormRegisterReturn[]
-}>=({profile,onSubmit,register})=>{
+    registerProfile:{
+        profileLabel: string;
+        register: UseFormRegisterReturn;
+    }[],
+   
+}>=({profile,onSubmit,registerProfile})=>{
 
     const [isRewritable,toggleRewritable]=useReducer(isRewritable=>!isRewritable,false);
 
@@ -36,33 +40,33 @@ const Profile:VFC<{
                 <Typography gutterBottom variant="h5" component="div">
                     プロフィール
                 </Typography>
-                {isRewritable?
-                  <ButtonWithTooltip
-                    title="プロフィール一覧に戻ります"
-                    iconButton={<MyStyleArrowBackIcon />}
-                    onClick={toggleRewritable}
-                 />:
+                {isRewritable?(
+                    <ButtonWithTooltip
+                        title="プロフィール一覧に戻ります"
+                        iconButton={<MyStyleArrowBackIcon />}
+                        onClick={toggleRewritable}
+                     />):(
                     <ButtonWithTooltip
                         title="プロフィールの編集をすることができます"
                         iconButton={<MyStyleEditIcon />}
                         onClick={toggleRewritable}
-                    />
+                    />)
                 }
 
-            {isRewritable?
+            {isRewritable?(
                 <RegisterProfileForm
-                profileLabels={profile.map((item)=>(item.profileLabel))} 
-                onSubmit={onSubmit}
-                register={register}
-            />:
-            <>
-                {profile.map((item,i)=>
-                    <RegistrationProfile 
-                        profileLabel={item.profileLabel} 
-                        fieldValue={item.prfileInformation} 
-                        key={i}
-                    />)}
-            </>
+                    registerProfile={registerProfile}
+                    onSubmit={onSubmit}
+                />):(
+                <>
+                    {profile.map((item)=>(
+                        <RegistrationProfile
+                            profileLabel={item.profileLabel}
+                            fieldValue={item.prfileInformation}
+                            key={item.profileLabel}
+                        />))
+                    }
+                </>)
             }
         </ProfileErea>
     )
