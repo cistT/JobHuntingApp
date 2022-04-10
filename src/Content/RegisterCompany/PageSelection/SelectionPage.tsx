@@ -1,14 +1,19 @@
-import { CircularProgress, styled } from "@mui/material";
+import { styled } from "@mui/material";
 import { VFC } from "react";
 
 
 
-const SelectionPage:VFC<{focusPage:number,page:number,title:string}>=({focusPage,page,title})=>{
+const SelectionPage:VFC<{
+    focusPage:number,
+    title:string
+}>=({focusPage,title})=>{
 
 
     return (
         <div style={{height:"600px",width:"100%",justifyContent: "center",fontSize:"20px"}}>
-            <div style={{backgroundColor:focusPage===page+1?"red":"white",fontSize:"15px"}}>{`step ${page}`}</div>
+            <div style={{fontSize:"15px"}}>
+                {`step ${focusPage+1}`}
+            </div>
             <div>{title}</div>
         </div>
     )

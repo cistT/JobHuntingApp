@@ -1,3 +1,4 @@
+import { Button } from "@mui/material"
 import { VFC } from "react"
 import { UseFormRegisterReturn } from "react-hook-form"
 import InputField from "./InputField"
@@ -26,7 +27,13 @@ const CompanyInputForm:VFC<{
                 })
             }
             <div style={{display:"flex",justifyContent:"center"}}>
-              <input type="submit" style={{justifyContent: 'center'}}/>
+                <Button
+                    type="submit"
+                    variant="outlined"
+                    style={{justifyContent: 'center'}}
+                >
+                    送信
+                </Button>
             </div>
             
         </form>

@@ -6,8 +6,13 @@ const NextPage:VFC<{clickNextButton:()=>void}>=({clickNextButton})=>{
 
     return (
         <>
-            <IconButton>
-                <ArrowForwardIosIcon onClick={()=>clickNextButton()}/>
+            <IconButton
+                style={{height:"60px"}}
+            >
+                <ArrowForwardIosIcon
+                    style={{height:"60px",width:"40px"}}
+                    onClick={()=>clickNextButton()}
+                />
             </IconButton>
         </>
     )

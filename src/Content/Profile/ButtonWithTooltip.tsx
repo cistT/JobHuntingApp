@@ -1,7 +1,7 @@
 import { IconButton, styled, Tooltip } from "@mui/material";
 import { VFC } from "react";
 
-const buttonSize="60px";
+const buttonSize='60px';
 
 const MyStyledButton=styled(IconButton)({
     height:buttonSize,
