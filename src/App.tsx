@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import Login from './Login/Login';
 import NewRegistration from './NewRegistration/NewRegistration';
 import useEffectCustom from './CustomHook/useEffectCustom';
+import InputTest from './InputTest';
 
 const App:VFC<{}>=()=> {
 
@@ -127,6 +128,8 @@ const App:VFC<{}>=()=> {
         openNewRegistration={openNewRegistration}
         logout={logout}
       />
+      {/* <InputTest /> */}
+      {!isNewRegistrationScreen&&!isLoginScreen&&!isLogin&&<h1>α版 1.0 更新(2022/4/14)</h1>}
 
       {isNewRegistrationScreen&&(
         <NewRegistration

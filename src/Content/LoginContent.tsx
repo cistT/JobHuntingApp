@@ -52,9 +52,9 @@ const LoginContent:VFC<{
        const {register,handleSubmit,reset}=useForm<InputLoginContent>();
 
        const clickDecisionProfile=(data:any)=>{
-           setUserName(data.userName||userName);
-           setProfileAppeal(data.profileAppeal||profileAppeal);
-           setProfileMemo(data.profileMemo||profileMemo);
+           setUserName(data.userName||"");
+           setProfileAppeal(data.profileAppeal||"");
+           setProfileMemo(data.profileMemo||"");
            togleProfile()
        }
 
@@ -147,7 +147,6 @@ const LoginContent:VFC<{
         )
     }
     useEffectCustom(()=>{
-        //エラー
         (async ()=>{
             const url = "http://localhost:8080/deleteRegisterId";
             window.alert(deleteId)
@@ -176,9 +175,9 @@ const LoginContent:VFC<{
                         {profileLabel:"メモ",prfileInformation:profileMemo},
                     ]}
                     registerProfile={[
-                        {profileLabel:"名前",register:register("userName")},
-                        {profileLabel:"アピール",register:register("profileAppeal")},
-                        {profileLabel:"メモ",register:register("profileMemo")},
+                        {registerLabel:"名前",register:register("userName")},
+                        {registerLabel:"アピール",register:register("profileAppeal")},
+                        {registerLabel:"メモ",register:register("profileMemo")},
                     ]}
                     onSubmit={handleSubmit(clickDecisionProfile)}
                 />
@@ -188,6 +187,19 @@ const LoginContent:VFC<{
                 <ListItemArea
                     companyRegistrationInfo={companyRegistrationInfo}
                     deletePrintRegistrationItem={deletePrintRegistrationItem}
+                    onSubmit={handleSubmit(clickDecisionCompany)}
+                    registerObj={[
+                        {registerLabel:"企業名",register:register("name")},
+                        {registerLabel:"住所",register:register("address")},
+                        {registerLabel:"電話番号",register:register("telephoneNumber")},
+                        {registerLabel:"メールアドレス",register:register("mailAddress")},
+                        {registerLabel:"URL",register:register("url")},
+                        {registerLabel:"提出物",register:register("deliverables")},
+                        {registerLabel:"提出物期限",register:register("deliverablesTerm")},
+                        {registerLabel:"インターンシップ日程",register:register("internship")},
+                        {registerLabel:"先行日程",register:register("selection")},
+                        {registerLabel:"メモ",register:register("memo")},
+                    ]}
                 />
             )}
 

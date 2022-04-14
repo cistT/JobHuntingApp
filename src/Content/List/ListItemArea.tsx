@@ -3,12 +3,18 @@ import {ListItemField} from "./ListItemField"
 import { CompanyInformationType } from "../TypeDefinitionFiles/CompanyInformationType";
 import { IconButton, ListItemButton, ListItemText } from "@mui/material";
 import DeleteOutlineTwoToneIcon from '@mui/icons-material/DeleteOutlineTwoTone';
+import { UseFormRegisterReturn } from "react-hook-form";
 
 
 export const ListItemArea:VFC<{
     companyRegistrationInfo:CompanyInformationType[],
-    deletePrintRegistrationItem:(registerId:string) => void
-}>=({deletePrintRegistrationItem,companyRegistrationInfo})=>{
+    deletePrintRegistrationItem:(registerId:string) => void,
+    onSubmit: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>
+    registerObj: {
+        registerLabel: string;
+        register: UseFormRegisterReturn;
+    }[]
+}>=({deletePrintRegistrationItem,companyRegistrationInfo,onSubmit,registerObj})=>{
 
     const [c,setC]=useState<number|null>(null);
     const clickCloseButton=()=>setC(null);
@@ -32,6 +38,8 @@ export const ListItemArea:VFC<{
             <ListItemField
                 printRegistrationItem={companyRegistrationInfo[c]}
                 clickCloseButton={clickCloseButton}
+                onSubmit={onSubmit}
+                registerObj={registerObj}
             />)
         }
         </>
