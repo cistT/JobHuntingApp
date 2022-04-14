@@ -7,16 +7,9 @@ import styled from "@emotion/styled";
 import ButtonWithTooltip from "./ButtonWithTooltip";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { Typography } from "@mui/material";
+import RewriteDialog from "../../RewriteDialog/RewriteDialog";
 
-const MyStyleEditIcon=styled(EditIcon)({
-    height:'60px',
-    width:'60px',
-})
 
-const MyStyleArrowBackIcon=styled(ArrowBackIcon)({
-    height:'60px',
-    width:'60px',
-})
 
 const ProfileErea=styled("div")({
     height:'70vh',
@@ -27,49 +20,81 @@ const Profile:VFC<{
     profile: {profileLabel:string,prfileInformation:string}[],
     onSubmit:(e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>,
     registerProfile:{
-        profileLabel: string;
+        registerLabel: string;
         register: UseFormRegisterReturn;
     }[],
    
 }>=({profile,onSubmit,registerProfile})=>{
 
-    const [isRewritable,toggleRewritable]=useReducer(isRewritable=>!isRewritable,false);
-
     return (
         <ProfileErea>
-                <Typography gutterBottom variant="h5" component="div">
-                    プロフィール
-                </Typography>
-                {isRewritable?(
-                    <ButtonWithTooltip
-                        title="プロフィール一覧に戻ります"
-                        iconButton={<MyStyleArrowBackIcon />}
-                        onClick={toggleRewritable}
-                     />):(
-                    <ButtonWithTooltip
-                        title="プロフィールの編集をすることができます"
-                        iconButton={<MyStyleEditIcon />}
-                        onClick={toggleRewritable}
-                    />)
-                }
+            <Typography gutterBottom variant="h5" component="div">
+                プロフィール
+            </Typography>
+            <RewriteDialog
+                onSubmit={onSubmit}
+                registerObj={registerProfile}
+            />
 
-            {isRewritable?(
-                <RegisterProfileForm
-                    registerProfile={registerProfile}
-                    onSubmit={onSubmit}
-                />):(
-                <>
-                    {profile.map((item)=>(
-                        <RegistrationProfile
-                            profileLabel={item.profileLabel}
-                            fieldValue={item.prfileInformation}
-                            key={item.profileLabel}
-                        />))
-                    }
-                </>)
-            }
+            <>
+                {profile.map((item)=>(
+                    <RegistrationProfile
+                        profileLabel={item.profileLabel}
+                        fieldValue={item.prfileInformation}
+                        key={item.profileLabel}
+                    />))
+                }
+            </>
+
         </ProfileErea>
     )
 }
 
 export default Profile;
+
+
+// const MyStyleEditIcon=styled(EditIcon)({
+//     height:'60px',
+//     width:'60px',
+// })
+
+// const MyStyleArrowBackIcon=styled(ArrowBackIcon)({
+//     height:'60px',
+//     width:'60px',
+// })
+
+
+
+//    const [isRewritable,toggleRewritable]=useReducer(isRewritable=>!isRewritable,false);
+
+
+//  {/* {isRewritable?(
+//                     <ButtonWithTooltip
+//                         title="プロフィール一覧に戻ります"
+//                         iconButton={<MyStyleArrowBackIcon />}
+//                         onClick={toggleRewritable}
+//                      />):(
+//                     <ButtonWithTooltip
+//                         title="プロフィールの編集をすることができます"
+//                         iconButton={<MyStyleEditIcon />}
+//                         onClick={toggleRewritable}
+//                     />)
+//                 } */}
+
+
+                
+//             {/* {isRewritable?(
+//                 <RegisterProfileForm
+//                     registerProfile={registerProfile}
+//                     onSubmit={onSubmit}
+//                 />):(
+//                 <>
+//                     {profile.map((item)=>(
+//                         <RegistrationProfile
+//                             profileLabel={item.profileLabel}
+//                             fieldValue={item.prfileInformation}
+//                             key={item.profileLabel}
+//                         />))
+//                     }
+//                 </>)
+//             } */}
