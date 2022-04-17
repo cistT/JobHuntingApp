@@ -11,3 +11,5 @@ export type CompanyInformationType={
     companySelection:string,
     companyMemo:string,
 }
+
+
