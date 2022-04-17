@@ -1,10 +1,8 @@
 import { useReducer, VFC } from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import { RegistrationProfile } from "./RegistrationProfile";
-import { RegisterProfileForm } from "./RegisterForm/RegisterProfileForm";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import styled from "@emotion/styled";
-import ButtonWithTooltip from "./ButtonWithTooltip";
 import { UseFormRegisterReturn } from "react-hook-form";
 import { Typography } from "@mui/material";
 import RewriteDialog from "../../RewriteDialog/RewriteDialog";
@@ -22,6 +20,7 @@ const Profile:VFC<{
     registerProfile:{
         registerLabel: string;
         register: UseFormRegisterReturn;
+        defaultValue:string;
     }[],
    
 }>=({profile,onSubmit,registerProfile})=>{

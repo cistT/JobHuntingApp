@@ -13,6 +13,7 @@ const RewriteDialog:VFC<{
   registerObj:{
     registerLabel: string;
     register: UseFormRegisterReturn;
+    defaultValue:string
 }[],
 }>=({onSubmit,registerObj})=> {
     const [open, setOpen] = useState(false);
@@ -56,7 +57,10 @@ const RewriteDialog:VFC<{
                         primary={reg.registerLabel}
                         // secondary="Titania"
                       />
-                      <input {...reg.register}/>
+                      <input
+                        defaultValue={reg.defaultValue}
+                        {...reg.register}
+                      />
                     </ListItem>
                     <Divider />
                   </div>

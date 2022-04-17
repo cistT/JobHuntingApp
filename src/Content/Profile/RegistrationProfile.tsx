@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box,Typography } from "@mui/material";
 import { VFC } from "react";
 
 export const RegistrationProfile:VFC<{
@@ -17,13 +17,5 @@ export const RegistrationProfile:VFC<{
                 </Typography>
             </Box>
         </Box>
-
-       )
+    )
 }
-
-
-{/* <Grid container style={{display: 'block'}}>
-<h1>{profileLabel}</h1>
- <Grid sm={2}/> 
-<div style={{height:"70px",paddingTop:"30px",paddingLeft:"10px"}}>{fieldValue}</div>
-</Grid> */}

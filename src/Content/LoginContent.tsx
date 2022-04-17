@@ -7,104 +7,92 @@ import { useForm } from 'react-hook-form';
 import useEffectCustom from "../CustomHook/useEffectCustom";
 import UUID from 'uuidjs';
 import { InputLoginContent } from "./TypeDefinitionFiles/InputLoginContent";
+import fetchData from "./fetchData";
+import sendData from "./sendData";
+import { FetchProfile, UpdateProfile } from "./TypeDefinitionFiles/ProfileType";
+import deleteData from "./deleteData";
 
 const LoginContent:VFC<{
     userId:string,
     content:number
 }>=({userId,content})=>{
+    const {register,handleSubmit,reset}=useForm<InputLoginContent>();
 
-       //Profile コンポーネント
-       const [userName,setUserName]=useState("");
-       const [profileAppeal,setProfileAppeal]=useState("");
-       const [profileMemo,setProfileMemo]=useState("");
-       const [profile,togleProfile]=useReducer(profile=>!profile,false);
+    //Profile コンポーネント
+    const [userName,setUserName]=useState("");
+    const [profileAppeal,setProfileAppeal]=useState("");
+    const [profileMemo,setProfileMemo]=useState("");
+    const [postProfile,toglePostProfile]=useReducer(postProfile=>!postProfile,false);
+    const fetchProfile=(json:FetchProfile)=>{
+            setUserName(json.userName||"");
+            setProfileAppeal(json.appeal||"");
+            setProfileMemo(json.memo||"");
+    }
 
-       useLayoutEffect(()=>{
-           //ログイン時に保存されているプロフィールを取得
-            (async ()=>{
-                const res=await fetch(`${process.env.REACT_APP_CONNECT_DB}/profile/userId=${userId}`);
-                const json=await res.json();
-                setUserName(json.userName||"");
-                setProfileAppeal(json.appeal||"");
-                setProfileMemo(json.memo||"");
-            })();
-           },[])
+    useLayoutEffect(()=>{
+        fetchData(
+            `${process.env.REACT_APP_CONNECT_DB}/profile/userId=${userId}`,
+            fetchProfile
+        );
+    },[userId])
 
-       useEffectCustom(()=>{
-        (async ()=>{
-            const url = "http://localhost:8080/test";
-            const response =fetch(url,{
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                  },
-                body:JSON.stringify({
-                    userId: userId,
-                    userName: userName,
-                    appeal:profileAppeal,
-                    memo:profileMemo
-                })
-            })
-            window.alert("登録が完了しました");
-        })()
-       },[profile])
+    useEffectCustom(()=>{
+        const sendProfile={
+            userId: userId,
+            userName: userName,
+            appeal:profileAppeal,
+            memo:profileMemo
+        }
+        sendData(
+            "http://localhost:8080/test",
+            sendProfile
+        );
+    },[postProfile])
 
-       const {register,handleSubmit,reset}=useForm<InputLoginContent>();
-
-       const clickDecisionProfile=(data:any)=>{
-           setUserName(data.userName||"");
-           setProfileAppeal(data.profileAppeal||"");
-           setProfileMemo(data.profileMemo||"");
-           togleProfile()
-       }
+    const clickDecisionProfile=(data:UpdateProfile)=>{
+        setUserName(data.userName||"");
+        setProfileAppeal(data.profileAppeal||"");
+        setProfileMemo(data.profileMemo||"");
+        toglePostProfile()
+    }
 
     //Registrationコンポーネント 要改善
-  
-    const [companyRegistrationInfo,setPrintRegistrationItems]=useState<CompanyInformationType[]>([]);
+    const [registeredCompanies,setRegisteredCompanies]=useState<CompanyInformationType[]>([]);
     const [registerFlag,toggleRegisterFlag]=useReducer(registerFlag=>!registerFlag,false);
 
     useLayoutEffect(()=>{
         //ログイン時に保存されているプロフィールを取得
-         (async ()=>{
-             const res=await fetch(`${process.env.REACT_APP_CONNECT_DB}/fetchCompany/userId=${userId}`);
-             const json=await res.json();
-             setPrintRegistrationItems(json);
-         })()
-        },[])
-
+        const fetchRegisteredCompanies=(json:CompanyInformationType[])=>setRegisteredCompanies(json);
+        fetchData(
+            `${process.env.REACT_APP_CONNECT_DB}/fetchCompany/userId=${userId}`,
+            fetchRegisteredCompanies
+        );
+    },[userId])
 
     useEffectCustom(()=>{
-        const company=companyRegistrationInfo[companyRegistrationInfo.length-1];
-
-        (async ()=>{
-            const url = "http://localhost:8080/registerCompany";
-            const res=fetch(url,{
-                method: "POST",
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json'
-                  },
-                body:JSON.stringify({
-                    userId: userId,
-                    registerId:company.registerId,
-                    companyName:company.companyName,
-                    companyAddress:company.companyAddress,
-                    companyTelephoneNumber:company.companyTelephoneNumber,
-                    companyMailAddress:company.companyMailAddress,
-                    companyUrl:company.companyUrl,
-                    companyDeliverables:company.companyDeliverables,
-                    companyDeliverablesTerm:company.companyDeliverablesTerm,
-                    companyInternship:company.companyInternship,
-                    companySelection:company.companySelection,
-                    companyMemo:company.companyMemo,
-                })
-            })
-        })()
+        const company=registeredCompanies[registeredCompanies.length-1];
+        const newRegisteredCompany= {
+            userId: userId,
+            registerId:company.registerId,
+            companyName:company.companyName,
+            companyAddress:company.companyAddress,
+            companyTelephoneNumber:company.companyTelephoneNumber,
+            companyMailAddress:company.companyMailAddress,
+            companyUrl:company.companyUrl,
+            companyDeliverables:company.companyDeliverables,
+            companyDeliverablesTerm:company.companyDeliverablesTerm,
+            companyInternship:company.companyInternship,
+            companySelection:company.companySelection,
+            companyMemo:company.companyMemo,
+        }
+        sendData(
+            "http://localhost:8080/registerCompany",
+            newRegisteredCompany
+        );
     },[registerFlag])
 
     const clickDecisionCompany=(data:any)=>{
-        
-        setPrintRegistrationItems([...companyRegistrationInfo,{
+        setRegisteredCompanies([...registeredCompanies,{
             registerId:UUID.generate(),
             companyName:data.name,
             companyAddress:data.address,
@@ -117,7 +105,6 @@ const LoginContent:VFC<{
             companySelection:data.selection,
             companyMemo:data.memo,
         }]);
-        window.alert("登録が完了しました");
         reset({
             userName:data.userName,
             profileAppeal:data.profileAppeal,
@@ -141,29 +128,48 @@ const LoginContent:VFC<{
     const deletePrintRegistrationItem=(registerId:string)=>{
         setDeleteId(registerId);
         toggleDeleteFlag();
-        setPrintRegistrationItems(
-            companyRegistrationInfo
+        setRegisteredCompanies(
+            registeredCompanies
             .filter((item)=>item.registerId!==registerId)
         )
     }
     useEffectCustom(()=>{
-        (async ()=>{
-            const url = "http://localhost:8080/deleteRegisterId";
-            window.alert(deleteId)
-            const response =await fetch(url,{
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                  },
-                body:JSON.stringify({
-                    userId:userId,
-                    deleteRegisterId:deleteId
-                })
-            })
-        })()
-        
+        deleteData(
+            "http://localhost:8080/deleteRegisterId",
+            {
+                userId:userId,
+                deleteRegisterId:deleteId
+            }
+        );
     },[deleteFlag])
-   
+
+    const [changeCompany,toggleChangeCompany]=useReducer(changeCompany=>!changeCompany,false);
+    const changeRegisteredCompany=(data:any,registerId:string)=>{
+        setRegisteredCompanies(
+            registeredCompanies.map((company)=>{
+                if(company.registerId===registerId){
+                    return (
+                        {
+                            registerId:registerId,
+                            companyName:data.name,
+                            companyAddress:data.address,
+                            companyTelephoneNumber:data.telephoneNumber,
+                            companyMailAddress:data.mailAddress,
+                            companyUrl:data.url,
+                            companyDeliverables:data.deliverables,
+                            companyDeliverablesTerm:data.deliverablesTerm,
+                            companyInternship:data.internship,
+                            companySelection:data.selection,
+                            companyMemo:data.memo,
+                        }
+                    )
+                }else{
+                    return company;
+                }
+            })
+        )
+        toggleChangeCompany();
+    }
 
     return (
         <>
@@ -175,9 +181,9 @@ const LoginContent:VFC<{
                         {profileLabel:"メモ",prfileInformation:profileMemo},
                     ]}
                     registerProfile={[
-                        {registerLabel:"名前",register:register("userName")},
-                        {registerLabel:"アピール",register:register("profileAppeal")},
-                        {registerLabel:"メモ",register:register("profileMemo")},
+                        {registerLabel:"名前",register:register("userName"),defaultValue:userName},
+                        {registerLabel:"アピール",register:register("profileAppeal"),defaultValue:profileAppeal},
+                        {registerLabel:"メモ",register:register("profileMemo"),defaultValue:profileMemo},
                     ]}
                     onSubmit={handleSubmit(clickDecisionProfile)}
                 />
@@ -185,7 +191,7 @@ const LoginContent:VFC<{
 
             {content===1&&(
                 <ListItemArea
-                    companyRegistrationInfo={companyRegistrationInfo}
+                    registeredCompanies={registeredCompanies}
                     deletePrintRegistrationItem={deletePrintRegistrationItem}
                     onSubmit={handleSubmit(clickDecisionCompany)}
                     registerObj={[

@@ -7,22 +7,22 @@ import { UseFormRegisterReturn } from "react-hook-form";
 
 
 export const ListItemArea:VFC<{
-    companyRegistrationInfo:CompanyInformationType[],
+    registeredCompanies:CompanyInformationType[],
     deletePrintRegistrationItem:(registerId:string) => void,
     onSubmit: (e?: React.BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>
     registerObj: {
         registerLabel: string;
         register: UseFormRegisterReturn;
     }[]
-}>=({deletePrintRegistrationItem,companyRegistrationInfo,onSubmit,registerObj})=>{
+}>=({deletePrintRegistrationItem,registeredCompanies,onSubmit,registerObj})=>{
 
     const [c,setC]=useState<number|null>(null);
     const clickCloseButton=()=>setC(null);
 
     return (
         <>{
-            c===null? companyRegistrationInfo!==null&&(
-            companyRegistrationInfo
+            c===null? registeredCompanies!==null&&(
+            registeredCompanies
             .map((item,i)=>{
                 return(
                     <ListItemButton key={i} style={{display:"flex",height:"100px"}}>
@@ -36,7 +36,7 @@ export const ListItemArea:VFC<{
                 )
             })):(
             <ListItemField
-                printRegistrationItem={companyRegistrationInfo[c]}
+                printRegistrationItem={registeredCompanies[c]}
                 clickCloseButton={clickCloseButton}
                 onSubmit={onSubmit}
                 registerObj={registerObj}
